@@ -22,6 +22,11 @@ public enum PopTipDirection {
   case none
 }
 
+/// Objective-C accessible enum for PopTipDirection
+@objc public enum PTDirection: Int {
+    case Up, Down, Left, Right, None
+}
+
 /** Enum that specifies the type of entrance animation. Entrance animations are performed while showing the poptip.
  
  - `scale`: The poptip scales from 0% to 100%
@@ -43,6 +48,11 @@ public enum PopTipEntranceAnimation {
   case none
 }
 
+/// Objective-C accessible enum for PopTipEntranceAnimation
+@objc public enum PTEntranceAnimation: Int {
+    case Scale, Transition, FadeIn, Custom, None
+}
+
 /** Enum that specifies the type of entrance animation. Entrance animations are performed while showing the poptip.
  
  - `scale`: The poptip scales from 100% to 0%
@@ -59,6 +69,11 @@ public enum PopTipExitAnimation {
   case custom
   /// No Animation
   case none
+}
+
+/// Objective-C accessible enum for PopTipExitAnimation
+@objc public enum PTExitAnimation: Int {
+    case Scale, FadeOut, Custom, None
 }
 
 /** Enum that specifies the type of action animation. Action animations are performed after the poptip is visible and the entrance animation completed.
@@ -92,7 +107,7 @@ open class PopTip: UIView {
     }
   }
   /// The `UIFont` used in the poptip's text
-  open var font = UIFont.systemFont(ofSize: UIFont.systemFontSize)
+  @objc open var font = UIFont.systemFont(ofSize: UIFont.systemFontSize)
   /// The `UIColor` of the text
   @objc open dynamic var textColor = UIColor.white
   /// The `NSTextAlignment` of the text
@@ -187,15 +202,15 @@ open class PopTip: UIView {
     }
   }
   /// A block that will be fired when the user taps the poptip.
-  open var tapHandler: ((PopTip) -> Void)?
+  @objc open var tapHandler: ((PopTip) -> Void)?
   /// A block that will be fired when the user taps outside the poptip.
-  open var tapOutsideHandler: ((PopTip) -> Void)?
+  @objc open var tapOutsideHandler: ((PopTip) -> Void)?
   /// A block that will be fired when the user swipes outside the poptip.
-  open var swipeOutsideHandler: ((PopTip) -> Void)?
+  @objc open var swipeOutsideHandler: ((PopTip) -> Void)?
   /// A block that will be fired when the poptip appears.
-  open var appearHandler: ((PopTip) -> Void)?
+  @objc open var appearHandler: ((PopTip) -> Void)?
   /// A block that will be fired when the poptip is dismissed.
-  open var dismissHandler: ((PopTip) -> Void)?
+  @objc open var dismissHandler: ((PopTip) -> Void)?
   /// A block that handles the entrance animation of the poptip. Should be provided
   /// when using a `PopTipActionAnimationCustom` entrance animation type.
   /// Please note that the poptip will be automatically added as a subview before firing the block
@@ -552,6 +567,15 @@ open class PopTip: UIView {
     
     show(duration: duration)
   }
+    
+  /// Objective-C accessible wrapper for show(text:)
+  @objc open func showText(direction: PTDirection, text: String, maxWidth: CGFloat, view: UIView, from: CGRect) {
+    self.show(text: text,
+              direction: self.tipDirection(direction),
+              maxWidth: maxWidth,
+              in: view,
+              from: from)
+  }
   
   /// Shows an animated poptip in a given view, from a given rectangle. The property `isVisible` will be `true` as soon as the poptip is added to the given view.
   ///
@@ -576,6 +600,15 @@ open class PopTip: UIView {
     from = frame
     
     show(duration: duration)
+  }
+    
+  /// Objective-C accessible wrapper for show(attributedText:)
+  @objc open func showAttributedText(direction: PTDirection, text: NSAttributedString, maxWidth: CGFloat, view: UIView, from: CGRect) {
+       self.show(attributedText: text,
+                 direction: self.tipDirection(direction),
+                 maxWidth: maxWidth,
+                 in: view,
+                 from: from)
   }
   
   
@@ -627,7 +660,41 @@ open class PopTip: UIView {
     self.customView = customView
     updateBubble()
   }
-  
+
+  /// Objective-C accessible implementation for setting the EntranceAnimation
+  @objc open func setEntranceAnimation(_ entranceAnimation: PTEntranceAnimation) {
+        switch entranceAnimation {
+        case .Scale:
+            self.entranceAnimation = .scale
+        case .Transition:
+            self.entranceAnimation = .transition
+        case .FadeIn:
+            self.entranceAnimation = .fadeIn
+        case .Custom:
+            self.entranceAnimation = .custom
+        case .None:
+            self.entranceAnimation = .none
+        @unknown default:
+            self.entranceAnimation = .none
+        }
+  }
+    
+  /// Objective-C accessible implementation for setting the ExitAnimation
+  @objc open func setExitAnimation(_ exitAnimation: PTExitAnimation) {
+        switch exitAnimation {
+        case .Scale:
+            self.exitAnimation = .scale
+        case .FadeOut:
+            self.exitAnimation = .fadeOut
+        case .Custom:
+            self.exitAnimation = .custom
+        case .None:
+            self.exitAnimation = .none
+        @unknown default:
+            self.exitAnimation = .none
+        }
+  }
+    
   /// Hides the poptip and removes it from the view. The property `isVisible` will be set to `false` when the animation is complete and the poptip is removed from the parent view.
   ///
   /// - Parameter forced: Force the removal, ignoring running animations
@@ -828,6 +895,23 @@ open class PopTip: UIView {
     UIView.animate(withDuration: actionAnimationIn / 2, delay: actionDelayIn, options: [.curveEaseInOut, .allowUserInteraction, .beginFromCurrentState, .autoreverse, .repeat], animations: {
       self.transform = CGAffineTransform(scaleX: offset, y: offset)
     }, completion: nil)
+  }
+    
+  fileprivate func tipDirection(_ direction: PTDirection) -> PopTipDirection {
+    switch direction {
+    case .Up:
+        return .up
+    case .Down:
+        return .down
+    case .Left:
+        return .left
+    case .Right:
+        return .right
+    case .None:
+        return .none
+    default:
+        return .none
+    }
   }
   
   deinit {
