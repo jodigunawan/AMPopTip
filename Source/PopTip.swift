@@ -107,7 +107,7 @@ open class PopTip: UIView {
     }
   }
   /// The `UIFont` used in the poptip's text
-  open var font = UIFont.systemFont(ofSize: UIFont.systemFontSize)
+  @objc open dynamic var font = UIFont.systemFont(ofSize: UIFont.systemFontSize)
   /// The `UIColor` of the text
   @objc open dynamic var textColor = UIColor.white
   /// The `NSTextAlignment` of the text
@@ -566,11 +566,6 @@ open class PopTip: UIView {
     from = frame
     
     show(duration: duration)
-  }
-    
-  /// Objective-C accessor for the font property
-  @objc open func set(font: UIFont) {
-      self.font = font
   }
     
   /// Objective-C accessible wrapper for show(text:)
