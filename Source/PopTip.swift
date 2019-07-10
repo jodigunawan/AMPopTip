@@ -24,19 +24,19 @@ public enum PopTipDirection {
 
 /// Objective-C accessible enum for PopTipDirection
 @objc public enum PTDirection: Int {
-    case Up, Down, Left, Right, None
+    case up, down, left, right, none
     
     func popTipDirection() -> PopTipDirection {
         switch self {
-        case .Up:
+        case .up:
             return .up
-        case .Down:
+        case .down:
             return .down
-        case .Left:
+        case .left:
             return .left
-        case .Right:
+        case .right:
             return .right
-        case .None:
+        case .none:
             return .none
         default:
             return .none
@@ -67,19 +67,19 @@ public enum PopTipEntranceAnimation {
 
 /// Objective-C accessible enum for PopTipEntranceAnimation
 @objc public enum PTEntranceAnimation: Int {
-    case Scale, Transition, FadeIn, Custom, None
+    case scale, transition, fadeIn, custom, none
     
     func setAnimation() -> PopTipEntranceAnimation {
         switch self {
-        case .Scale:
+        case .scale:
             return .scale
-        case .Transition:
+        case .transition:
             return .transition
-        case .FadeIn:
+        case .fadeIn:
             return .fadeIn
-        case .Custom:
+        case .custom:
             return .custom
-        case .None:
+        case .none:
             return .none
         @unknown default:
             return .none
@@ -107,17 +107,17 @@ public enum PopTipExitAnimation {
 
 /// Objective-C accessible enum for PopTipExitAnimation
 @objc public enum PTExitAnimation: Int {
-    case Scale, FadeOut, Custom, None
+    case scale, fadeOut, custom, none
     
     func setAnimation() -> PopTipExitAnimation {
         switch self {
-        case .Scale:
+        case .scale:
             return .scale
-        case .FadeOut:
+        case .fadeOut:
             return .fadeOut
-        case .Custom:
+        case .custom:
             return .custom
-        case .None:
+        case .none:
             return .none
         @unknown default:
             return .none
