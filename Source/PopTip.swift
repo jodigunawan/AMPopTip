@@ -9,7 +9,7 @@
 import UIKit
 
 /// Enum that specifies the direction of the poptip
-public enum PopTipDirection {
+@objc public enum PopTipDirection: Int {
   /// Up, the poptip will appear above the element, arrow pointing down
   case up
   /// Down, the poptip will appear below the element, arrow pointing up
@@ -22,28 +22,6 @@ public enum PopTipDirection {
   case none
 }
 
-/// Objective-C accessible enum for PopTipDirection
-@objc public enum PTDirection: Int {
-    case up, down, left, right, none
-    
-    func popTipDirection() -> PopTipDirection {
-        switch self {
-        case .up:
-            return .up
-        case .down:
-            return .down
-        case .left:
-            return .left
-        case .right:
-            return .right
-        case .none:
-            return .none
-        default:
-            return .none
-        }
-    }
-}
-
 /** Enum that specifies the type of entrance animation. Entrance animations are performed while showing the poptip.
  
  - `scale`: The poptip scales from 0% to 100%
@@ -52,7 +30,7 @@ public enum PopTipDirection {
  - `custom`: The Animation is provided by the user
  - `none`: No Animation
  */
-public enum PopTipEntranceAnimation {
+@objc public enum PopTipEntranceAnimation: Int {
   /// The poptip scales from 0% to 100%
   case scale
   /// The poptip moves in position from the edge of the screen
@@ -65,28 +43,6 @@ public enum PopTipEntranceAnimation {
   case none
 }
 
-/// Objective-C accessible enum for PopTipEntranceAnimation
-@objc public enum PTEntranceAnimation: Int {
-    case scale, transition, fadeIn, custom, none
-    
-    func setAnimation() -> PopTipEntranceAnimation {
-        switch self {
-        case .scale:
-            return .scale
-        case .transition:
-            return .transition
-        case .fadeIn:
-            return .fadeIn
-        case .custom:
-            return .custom
-        case .none:
-            return .none
-        @unknown default:
-            return .none
-        }
-    }
-}
-
 /** Enum that specifies the type of entrance animation. Entrance animations are performed while showing the poptip.
  
  - `scale`: The poptip scales from 100% to 0%
@@ -94,7 +50,7 @@ public enum PopTipEntranceAnimation {
  - `custom`: The Animation is provided by the user
  - `none`: No Animation
  */
-public enum PopTipExitAnimation {
+@objc public enum PopTipExitAnimation: Int {
   /// The poptip scales from 100% to 0%
   case scale
   /// The poptip fades out
@@ -103,26 +59,6 @@ public enum PopTipExitAnimation {
   case custom
   /// No Animation
   case none
-}
-
-/// Objective-C accessible enum for PopTipExitAnimation
-@objc public enum PTExitAnimation: Int {
-    case scale, fadeOut, custom, none
-    
-    func setAnimation() -> PopTipExitAnimation {
-        switch self {
-        case .scale:
-            return .scale
-        case .fadeOut:
-            return .fadeOut
-        case .custom:
-            return .custom
-        case .none:
-            return .none
-        @unknown default:
-            return .none
-        }
-    }
 }
 
 /** Enum that specifies the type of action animation. Action animations are performed after the poptip is visible and the entrance animation completed.
@@ -198,9 +134,9 @@ open class PopTip: UIView {
   /// Holds the NSTimeInterval with the delay of the disappearing animation
   @objc open dynamic var delayOut: TimeInterval = 0
   /// Holds the enum with the type of entrance animation (triggered once the poptip is shown)
-  open var entranceAnimation = PopTipEntranceAnimation.scale
+  @objc open dynamic var entranceAnimation = PopTipEntranceAnimation.scale
   /// Holds the enum with the type of exit animation (triggered once the poptip is dismissed)
-  open var exitAnimation = PopTipExitAnimation.scale
+  @objc open dynamic var exitAnimation = PopTipExitAnimation.scale
   /// Holds the enum with the type of action animation (triggered once the poptip is shown)
   open var actionAnimation = PopTipActionAnimation.none
   /// Holds the NSTimeInterval with the duration of the action animation
@@ -617,13 +553,23 @@ open class PopTip: UIView {
     show(duration: duration)
   }
     
-  /// Objective-C accessible wrapper for show(text:)
-  @objc open func showText(direction: PTDirection, text: String, maxWidth: CGFloat, view: UIView, from: CGRect) {
+  /// Objective-C accessible wrapper for show(text:) with nil duration parameter
+  @objc open func showText(direction: PopTipDirection, text: String, maxWidth: CGFloat, view: UIView, from: CGRect) {
     self.show(text: text,
-              direction: direction.popTipDirection(),
+              direction: direction,
               maxWidth: maxWidth,
               in: view,
               from: from)
+  }
+    
+  /// Objective-C accessible wrapper for show(text:) with duration parameter
+  @objc open func showText(direction: PopTipDirection, text: String, maxWidth: CGFloat, view: UIView, from: CGRect, duration: TimeInterval) {
+    self.show(text: text,
+              direction: direction,
+              maxWidth: maxWidth,
+              in: view,
+              from: from,
+              duration: duration)
   }
   
   /// Shows an animated poptip in a given view, from a given rectangle. The property `isVisible` will be `true` as soon as the poptip is added to the given view.
@@ -651,15 +597,24 @@ open class PopTip: UIView {
     show(duration: duration)
   }
     
-  /// Objective-C accessible wrapper for show(attributedText:)
-  @objc open func showAttributedText(direction: PTDirection, text: NSAttributedString, maxWidth: CGFloat, view: UIView, from: CGRect) {
-       self.show(attributedText: text,
-                 direction: direction.popTipDirection(),
-                 maxWidth: maxWidth,
+  /// Objective-C accessible wrapper for show(attributedText:) with nil duration parameter
+  @objc open func showAttributedText(direction: PopTipDirection, text: NSAttributedString, maxWidth: CGFloat, view: UIView, from: CGRect) {
+    self.show(attributedText: text,
+              direction: direction,
+              maxWidth: maxWidth,
                  in: view,
                  from: from)
   }
-  
+    
+  /// Objective-C accessible wrapper for show(attributedText:) with duration parameter
+  @objc open func showAttributedText(direction: PopTipDirection, text: NSAttributedString, maxWidth: CGFloat, view: UIView, from: CGRect, duration: TimeInterval) {
+    self.show(attributedText: text,
+                  direction: direction,
+                  maxWidth: maxWidth,
+                  in: view,
+                  from: from,
+                  duration: duration)
+  }
   
   /// Shows an animated poptip in a given view, from a given rectangle. The property `isVisible` will be `true` as soon as the poptip is added to the given view.
   ///
@@ -685,6 +640,23 @@ open class PopTip: UIView {
     
     show(duration: duration)
   }
+    
+  /// Objective-C accessible wrapper for show(attributedText:) with nil duration parameter
+  @objc open func showCustomView(direction: PopTipDirection, customView: UIView, in view: UIView, from frame: CGRect) {
+    self.show(customView: customView,
+              direction: direction,
+              in: view,
+              from: frame)
+  }
+    
+  /// Objective-C accessible wrapper for show(customView:) with duration parameter
+  @objc open func showCustomView(direction: PopTipDirection, customView: UIView, in view: UIView, from frame: CGRect, duration: TimeInterval) {
+    self.show(customView: customView,
+              direction: direction,
+              in: view,
+              from: frame,
+              duration: duration)
+  }
   
   /// Update the current text
   ///
@@ -708,16 +680,6 @@ open class PopTip: UIView {
   open func update(customView: UIView) {
     self.customView = customView
     updateBubble()
-  }
-
-  /// Objective-C accessible implementation for setting the EntranceAnimation
-  @objc open func setEntranceAnimation(_ entranceAnimation: PTEntranceAnimation) {
-    self.entranceAnimation = entranceAnimation.setAnimation()
-  }
-    
-  /// Objective-C accessible implementation for setting the ExitAnimation
-  @objc open func setExitAnimation(_ exitAnimation: PTExitAnimation) {
-    self.exitAnimation = exitAnimation.setAnimation()
   }
     
   /// Hides the poptip and removes it from the view. The property `isVisible` will be set to `false` when the animation is complete and the poptip is removed from the parent view.
