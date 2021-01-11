@@ -19,6 +19,7 @@ class ViewController: UIViewController {
   var direction = PopTipDirection.up
   var topRightDirection = PopTipDirection.down
   var timer: Timer? = nil
+  var autolayoutView: UIView?
 
   let /* Rival Sons's Tied Up */ lyrics = [
     "Go to the dark side full moon",
@@ -48,12 +49,13 @@ class ViewController: UIViewController {
     */
 //    popTip.borderWidth = 2
 //    popTip.borderColor = UIColor.blue
-    popTip.shadowOpacity = 0.4
-    popTip.shadowRadius = 3
-    popTip.shadowOffset = CGSize(width: 1, height: 1)
-    popTip.shadowColor = .black
+//    popTip.shadowOpacity = 0.4
+//    popTip.shadowRadius = 3
+//    popTip.shadowOffset = CGSize(width: 1, height: 1)
+//    popTip.shadowColor = .black
     
     popTip.actionAnimation = .bounce(8)
+//    popTip.actionAnimation = .pulse(1.1)
 
     popTip.tapHandler = { _ in
       print("tap")
@@ -70,6 +72,9 @@ class ViewController: UIViewController {
     popTip.dismissHandler = { _ in
       print("dismiss")
     }
+    
+    autolayoutView = Bundle.main.loadNibNamed(String(describing: AutolayoutView.self), owner: self, options: nil)?.first as? UIView
+    autolayoutView?.frame.size = CGSize(width: 180, height: 100)
   }
   
   var showSwiftUIView = false
@@ -98,7 +103,7 @@ class ViewController: UIViewController {
         label.font = UIFont.systemFont(ofSize: 12)
         customView.addSubview(label)
         
-        popTip.show(customView: customView, direction: .down, in: view, from: sender.frame)
+        popTip.show(customView: customView, direction: .auto, in: view, from: sender.frame)
       }
       else if #available(iOS 13.0.0, *) {
         #if canImport(SwiftUI) && canImport(Combine)
@@ -125,7 +130,7 @@ class ViewController: UIViewController {
       } else {
         topRightDirection = .left
       }
-      popTip.show(text: "I have a offset to move the bubble down or left side.", direction: topRightDirection, maxWidth: 150, in: view, from: sender.frame)
+      popTip.show(text: "I have an offset to move the bubble down or left side.", direction: .autoHorizontal, maxWidth: 150, in: view, from: sender.frame)
       
     case .bottomLeft:
       popTip.bubbleColor = UIColor(red: 0.73, green: 0.91, blue: 0.55, alpha: 1)
@@ -137,7 +142,8 @@ class ViewController: UIViewController {
       
     case .bottomRight:
       popTip.bubbleColor = UIColor(red: 0.81, green: 0.04, blue: 0.14, alpha: 1)
-      popTip.show(text: "Animated popover, great for subtle UI tips and onboarding", direction: .left, maxWidth: 200, in: view, from: sender.frame)
+//      popTip.show(text: "Animated popover, great for subtle UI tips and onboarding", direction: .left, maxWidth: 200, in: view, from: sender.frame)
+      popTip.show(customView: autolayoutView!, direction: .left, in: view, from: sender.frame)
       
     case .center:
       popTip.arrowRadius = 2
@@ -155,6 +161,12 @@ class ViewController: UIViewController {
 extension PopTipDirection {
   func cycleDirection() -> PopTipDirection {
     switch self {
+    case .auto:
+      return .auto
+    case .autoVertical:
+      return .autoVertical
+    case .autoHorizontal:
+      return .autoHorizontal
     case .up:
       return .right
     case .right:
